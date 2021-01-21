@@ -19,12 +19,17 @@ class TwiffleHandler:
         self.stream.filter(track=track)
 
 
-class TwiffleListener(tweepy.StreamListener):
-    def current_status_is_retweeted(self):
+class TwiffleStatus:
+    def __init__(self, status):
+        self.status = status
+
+    @property
+    def is_retweet(self):
         return hasattr(self.status, 'retweeted_status')
 
-    def current_status_get_text(self):
-        if self.current_status_is_retweeted():
+    @property
+    def text(self):
+        if self.is_retweet:
             try:
                 text = self.status.retweeted_status.extended_tweet['full_text']
             except AttributeError:
@@ -36,10 +41,20 @@ class TwiffleListener(tweepy.StreamListener):
                 text = self.status.text
         return text
 
+    @property
+    def url(self):
+        return f'https://twitter.com/twitter/statuses/{self.status.id}'
+
+
+class TwiffleListener(tweepy.StreamListener):
     def on_status(self, status):
-        self.status = status
-        # text = self.current_status_get_text()
-        print(self.status.user.screen_name)
+        ts = TwiffleStatus(status)
+        print(ts.text)
+        print(ts.status.user.screen_name)
+        print(ts.status.id)
+        print(ts.status.created_at)
+        print(ts.url)
+        print(ts.is_retweet)
 
     def on_error(self, status):
         print(status)
