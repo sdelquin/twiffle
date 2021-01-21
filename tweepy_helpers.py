@@ -20,25 +20,26 @@ class TwiffleHandler:
 
 
 class TwiffleListener(tweepy.StreamListener):
-    @staticmethod
-    def _get_tweet(status):
-        if hasattr(status, "retweeted_status"):  # Check if Retweet
-            retweeted = True
+    def current_status_is_retweeted(self):
+        return hasattr(self.status, 'retweeted_status')
+
+    def current_status_get_text(self):
+        if self.current_status_is_retweeted():
             try:
-                text = status.retweeted_status.extended_tweet["full_text"]
+                text = self.status.retweeted_status.extended_tweet['full_text']
             except AttributeError:
-                text = status.retweeted_status.text
+                text = self.status.retweeted_status.text
         else:
-            retweeted = False
             try:
-                text = status.extended_tweet["full_text"]
+                text = self.status.extended_tweet["full_text"]
             except AttributeError:
-                text = status.text
-        return text, retweeted
+                text = self.status.text
+        return text
 
     def on_status(self, status):
-        text, retweeted = TwiffleListener._get_tweet(status)
-        print(text)
+        self.status = status
+        # text = self.current_status_get_text()
+        print(self.status.user.screen_name)
 
     def on_error(self, status):
         print(status)
