@@ -6,7 +6,7 @@ class DBHandler:
         self.conn = sqlite3.connect(database_filename)
         self.cursor = self.conn.cursor()
 
-    def init_db(self):
+    def init(self):
         query = '''CREATE TABLE status (
                 id TEXT PRIMARY KEY,
                 username TEXT,
@@ -19,6 +19,7 @@ class DBHandler:
         except sqlite3.OperationalError:
             print('Database already exists!')
 
-    def insert_record(self, id, username, text, created_at, url, is_retweet, /):
+    def insert(self, id, username, text, created_at, url, is_retweet, /):
         query = 'INSERT INTO status VALUES (?, ?, ?, ?, ?, ?)'
         self.cursor.execute(query, (id, username, text, created_at, url, is_retweet))
+        self.conn.commit()

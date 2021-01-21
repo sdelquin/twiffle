@@ -1,16 +1,17 @@
 import tweepy
+
 import config
 
 
 class TwiffleHandler:
-    def __init__(self):
+    def __init__(self, db_handler):
         auth = tweepy.OAuthHandler(config.API_CONSUMER_KEY, config.API_CONSUMER_SECRET)
         auth.set_access_token(config.API_ACCESS_TOKEN, config.API_ACCESS_TOKEN_SECRET)
-        self.api = tweepy.API(auth)
+        api = tweepy.API(auth)
 
-        self.listener = TwiffleListener()
+        self.listener = TwiffleListener(api, db_handler)
         self.stream = tweepy.Stream(
-            auth=self.api.auth, tweet_mode='extended', listener=self.listener
+            auth=api.auth, tweet_mode='extended', listener=self.listener
         )
 
     def run_stream(self, *tracking_keywords):
@@ -47,14 +48,21 @@ class TwiffleStatus:
 
 
 class TwiffleListener(tweepy.StreamListener):
+    def __init__(self, api, db_handler):
+        self.api = api
+        self.db_handler = db_handler
+
     def on_status(self, status):
+        print('NEW!')
         ts = TwiffleStatus(status)
-        print(ts.text)
-        print(ts.status.user.screen_name)
-        print(ts.status.id)
-        print(ts.status.created_at)
-        print(ts.url)
-        print(ts.is_retweet)
+        self.db_handler.insert(
+            ts.status.id,
+            ts.status.user.screen_name,
+            ts.text,
+            ts.status.created_at,
+            ts.url,
+            ts.is_retweet,
+        )
 
     def on_error(self, status):
         print(status)
