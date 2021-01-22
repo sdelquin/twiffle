@@ -1,16 +1,19 @@
 from typing import List
 
 import typer
+from loguru import logger
 
 from db_utils import DBHandler
 from tweepy_helpers import TwiffleHandler
+
+logger.add('twiffle.log', rotation='10MB', retention=5)
 
 app = typer.Typer()
 db_handler = DBHandler()
 
 
 @app.command()
-def run(tracking_keywords: List[str]):
+def track(tracking_keywords: List[str]):
     twiffle_handler = TwiffleHandler(db_handler)
     twiffle_handler.run_stream(*tracking_keywords)
 

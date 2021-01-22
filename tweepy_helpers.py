@@ -1,20 +1,26 @@
 import tweepy
+from loguru import logger
 
 import config
 
 
 class TwiffleHandler:
     def __init__(self, db_handler):
+        logger.debug('Creating Twitter API handler')
         auth = tweepy.OAuthHandler(config.API_CONSUMER_KEY, config.API_CONSUMER_SECRET)
         auth.set_access_token(config.API_ACCESS_TOKEN, config.API_ACCESS_TOKEN_SECRET)
         api = tweepy.API(auth)
 
+        logger.debug('Creating Twitter API listener')
         self.listener = TwiffleListener(api, db_handler)
+
+        logger.debug('Creating Twitter stream')
         self.stream = tweepy.Stream(
             auth=api.auth, tweet_mode='extended', listener=self.listener
         )
 
     def run_stream(self, *tracking_keywords):
+        logger.info(f'Tracking keywords: {" ".join(tracking_keywords)}')
         # filter whole keywords
         track = [f' {k.strip()} ' for k in tracking_keywords]
         self.stream.filter(track=track)
@@ -53,7 +59,7 @@ class TwiffleListener(tweepy.StreamListener):
         self.db_handler = db_handler
 
     def on_status(self, status):
-        print('NEW!')
+        logger.info(f'New tweet captured! {status.id}')
         ts = TwiffleStatus(status)
         self.db_handler.insert(
             ts.status.id,
@@ -65,4 +71,4 @@ class TwiffleListener(tweepy.StreamListener):
         )
 
     def on_error(self, status):
-        print(status)
+        logger.error(status)

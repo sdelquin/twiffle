@@ -1,3 +1,4 @@
 tweepy
 prettyconf
 typer
+loguru
