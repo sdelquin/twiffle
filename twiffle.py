@@ -18,7 +18,7 @@ app = typer.Typer()
 
 
 @app.command()
-def track(tracking_keywords: List[str], database: str = config.DATABASE_NAME):
+def track(tracking_keywords: List[str], database: Path = config.DATABASE_NAME):
     db_handler = DBHandler(database)
     twiffle_handler = TwiffleHandler(db_handler)
     twiffle_handler.run_stream(*tracking_keywords)
@@ -29,8 +29,9 @@ def dump_users(
     output_filename: Path = typer.Option(None, '--output', '-o'),
     since: str = None,
     until: str = None,
+    database: Path = config.DATABASE_NAME,
 ):
-    db_handler = DBHandler()
+    db_handler = DBHandler(database)
     users = db_handler.extract_users(since=since, until=until)
     users = '\n'.join(users)
     if output_filename is not None:

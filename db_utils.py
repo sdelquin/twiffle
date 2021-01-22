@@ -12,7 +12,8 @@ class DBHandler:
         )
         self.conn.row_factory = sqlite3.Row
         self.cursor = self.conn.cursor()
-        self.create_db()
+        if not database_filename.exists():
+            self.create_db()
 
     def create_db(self):
         logger.debug('Creating database')
