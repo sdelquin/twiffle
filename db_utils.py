@@ -3,9 +3,11 @@ from datetime import datetime
 
 from loguru import logger
 
+import config
+
 
 class DBHandler:
-    def __init__(self, database_filename='twiffle.db'):
+    def __init__(self, database_filename=config.DATABASE_NAME):
         logger.debug(f'Creating database connection to {database_filename}')
         self.conn = sqlite3.connect(
             database_filename, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES

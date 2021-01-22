@@ -1,3 +1,5 @@
+import os
+
 import tweepy
 from loguru import logger
 
@@ -50,7 +52,7 @@ class TwiffleStatus:
 
     @property
     def url(self):
-        return f'https://twitter.com/twitter/statuses/{self.status.id}'
+        return os.path.join(config.TWITTER_STATUS_BASE_URL, str(self.status.id))
 
 
 class TwiffleListener(tweepy.StreamListener):

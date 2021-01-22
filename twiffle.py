@@ -3,10 +3,15 @@ from typing import List
 import typer
 from loguru import logger
 
+import config
 from db_utils import DBHandler
 from tweepy_helpers import TwiffleHandler
 
-logger.add('twiffle.log', rotation='10MB', retention=5)
+logger.add(
+    config.LOGFILE_NAME,
+    rotation=config.LOGFILE_ROTATION,
+    retention=config.LOGFILE_RETENTION,
+)
 
 app = typer.Typer()
 db_handler = DBHandler()
