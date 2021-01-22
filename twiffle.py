@@ -18,8 +18,8 @@ app = typer.Typer()
 
 
 @app.command()
-def track(tracking_keywords: List[str]):
-    db_handler = DBHandler()
+def track(tracking_keywords: List[str], database: str = config.DATABASE_NAME):
+    db_handler = DBHandler(database)
     twiffle_handler = TwiffleHandler(db_handler)
     twiffle_handler.run_stream(*tracking_keywords)
 
