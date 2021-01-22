@@ -7,16 +7,17 @@ from loguru import logger
 class DBHandler:
     def __init__(self, database_filename):
         logger.debug(f'Opening database connection to {database_filename}')
+        is_new_db = not database_filename.exists()
         self.conn = sqlite3.connect(
             database_filename, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES
         )
         self.conn.row_factory = sqlite3.Row
         self.cursor = self.conn.cursor()
-        if not database_filename.exists():
-            self.create_db()
+        if is_new_db:
+            self.create_table()
 
-    def create_db(self):
-        logger.debug('Creating database')
+    def create_table(self):
+        logger.debug('Creating status table')
         query = '''CREATE TABLE status (
                 id TEXT PRIMARY KEY,
                 username TEXT,
@@ -27,7 +28,7 @@ class DBHandler:
         try:
             self.cursor.execute(query)
         except sqlite3.OperationalError:
-            logger.debug('Database already exists! Not created')
+            logger.debug('Table already exists! Not created')
 
     def insert(self, id, username, text, created_at, url, is_retweet, /):
         logger.debug('Inserting new row on database')
