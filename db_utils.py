@@ -42,5 +42,4 @@ class DBHandler:
                    WHERE created_at >= ? and created_at <= ?'''
         self.cursor.execute(query, (since, until))
         rows = self.cursor.fetchall()
-        for row in rows:
-            print(row['username'])
+        return [row['username'] for row in rows]
