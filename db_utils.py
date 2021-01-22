@@ -45,7 +45,9 @@ class DBHandler:
         logger.info(f'Extracting unique usernames from {since} to {until}')
         query = '''SELECT DISTINCT(username)
                    FROM status
-                   WHERE created_at >= ? and created_at <= ? and is_retweet=?'''
-        self.cursor.execute(query, (since, until, int(include_retweets)))
+                   WHERE created_at >= ? and created_at <= ?'''
+        if not include_retweets:
+            query += ' and is_retweet=0'
+        self.cursor.execute(query, (since, until))
         rows = self.cursor.fetchall()
         return [row['username'] for row in rows]
