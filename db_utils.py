@@ -44,7 +44,7 @@ class DBHandler:
         """
         since = since or datetime.min.isoformat(' ', 'seconds')
         until = until or datetime.now().isoformat(' ', 'seconds')
-        logger.info(f'Dumping unique usernames from {since} to {until}')
+        logger.info(f'Extracting unique usernames from {since} to {until}')
         query = '''SELECT DISTINCT(username)
                    FROM status
                    WHERE created_at >= ? and created_at <= ?'''

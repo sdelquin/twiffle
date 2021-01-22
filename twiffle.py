@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List
 
 import typer
@@ -24,9 +25,18 @@ def track(tracking_keywords: List[str]):
 
 
 @app.command()
-def dump_users(since: str = None, until: str = None):
+def dump_users(
+    output_filename: Path = typer.Option(None, '--output', '-o'),
+    since: str = None,
+    until: str = None,
+):
     users = db_handler.extract_users(since=since, until=until)
-    print('\n'.join(users))
+    users = '\n'.join(users)
+    if output_filename is not None:
+        logger.info(f'Dumping usernames to {output_filename}')
+        output_filename.write_text(users)
+    else:
+        print(users)
 
 
 if __name__ == "__main__":
