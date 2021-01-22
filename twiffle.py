@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -27,8 +28,8 @@ def track(tracking_keywords: List[str], database: Path = config.DATABASE_NAME):
 @app.command()
 def dump_users(
     output_filename: Path = typer.Option(None, '--output', '-o'),
-    since: str = None,
-    until: str = None,
+    since: str = datetime.min.isoformat(' ', 'seconds'),
+    until: str = datetime.now().isoformat(' ', 'seconds'),
     retweets: bool = typer.Option(True, help='Include retweets.'),
     database: Path = config.DATABASE_NAME,
 ):

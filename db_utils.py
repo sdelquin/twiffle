@@ -1,5 +1,4 @@
 import sqlite3
-from datetime import datetime
 
 from loguru import logger
 
@@ -36,15 +35,13 @@ class DBHandler:
         self.cursor.execute(query, (id, username, text, created_at, url, is_retweet))
         self.conn.commit()
 
-    def extract_users(self, since: str = None, until: str = None, include_retweets=True):
+    def extract_users(self, since: str, until: str, include_retweets=True):
         """Extract unique usernames with tweets created after "since" and before "until"
         Parameters
         ----------
             since: str with isoformat "YYYY-MM-DD HH:MM:SS"
             until: str with isoformat "YYYY-MM-DD HH:MM:SS"
         """
-        since = since or datetime.min.isoformat(' ', 'seconds')
-        until = until or datetime.now().isoformat(' ', 'seconds')
         logger.info(f'Extracting unique usernames from {since} to {until}')
         query = '''SELECT DISTINCT(username)
                    FROM status
