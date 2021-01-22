@@ -29,10 +29,11 @@ def dump_users(
     output_filename: Path = typer.Option(None, '--output', '-o'),
     since: str = None,
     until: str = None,
+    retweets: bool = typer.Option(True, help='Include retweets.'),
     database: Path = config.DATABASE_NAME,
 ):
     db_handler = DBHandler(database)
-    users = db_handler.extract_users(since=since, until=until)
+    users = db_handler.extract_users(since=since, until=until, include_retweets=retweets)
     users = '\n'.join(users)
     if output_filename is not None:
         logger.info(f'Dumping usernames to {output_filename}')

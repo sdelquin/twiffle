@@ -36,7 +36,7 @@ class DBHandler:
         self.cursor.execute(query, (id, username, text, created_at, url, is_retweet))
         self.conn.commit()
 
-    def extract_users(self, since: str = None, until: str = None):
+    def extract_users(self, since: str = None, until: str = None, include_retweets=True):
         """Extract unique usernames with tweets created after "since" and before "until"
         Parameters
         ----------
@@ -48,7 +48,7 @@ class DBHandler:
         logger.info(f'Extracting unique usernames from {since} to {until}')
         query = '''SELECT DISTINCT(username)
                    FROM status
-                   WHERE created_at >= ? and created_at <= ?'''
-        self.cursor.execute(query, (since, until))
+                   WHERE created_at >= ? and created_at <= ? and is_retweet=?'''
+        self.cursor.execute(query, (since, until, int(include_retweets)))
         rows = self.cursor.fetchall()
         return [row['username'] for row in rows]
