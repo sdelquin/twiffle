@@ -15,11 +15,11 @@ logger.add(
 )
 
 app = typer.Typer()
-db_handler = DBHandler()
 
 
 @app.command()
 def track(tracking_keywords: List[str]):
+    db_handler = DBHandler()
     twiffle_handler = TwiffleHandler(db_handler)
     twiffle_handler.run_stream(*tracking_keywords)
 
@@ -30,6 +30,7 @@ def dump_users(
     since: str = None,
     until: str = None,
 ):
+    db_handler = DBHandler()
     users = db_handler.extract_users(since=since, until=until)
     users = '\n'.join(users)
     if output_filename is not None:

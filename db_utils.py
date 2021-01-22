@@ -8,14 +8,15 @@ import config
 
 class DBHandler:
     def __init__(self, database_filename=config.DATABASE_NAME):
-        logger.debug(f'Creating database connection to {database_filename}')
+        logger.debug(f'Opening database connection to {database_filename}')
         self.conn = sqlite3.connect(
             database_filename, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES
         )
         self.conn.row_factory = sqlite3.Row
         self.cursor = self.conn.cursor()
+        self.create_db()
 
-    def init(self):
+    def create_db(self):
         logger.debug('Creating database')
         query = '''CREATE TABLE status (
                 id TEXT PRIMARY KEY,
@@ -27,7 +28,7 @@ class DBHandler:
         try:
             self.cursor.execute(query)
         except sqlite3.OperationalError:
-            logger.error('Database already exists!')
+            logger.debug('Database already exists! Not created')
 
     def insert(self, id, username, text, created_at, url, is_retweet, /):
         logger.debug('Inserting new row on database')
