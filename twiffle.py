@@ -38,7 +38,6 @@ def dump_users(
     users = db_handler.extract_users(since=since, until=until, include_retweets=retweets)
     users = '\n'.join([f'@{u}' for u in users])
     if output_filename is not None:
-        logger.info(f'Dumping usernames to {output_filename}')
         output_filename.write_text(users)
     else:
         print(users)
