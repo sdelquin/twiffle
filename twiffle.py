@@ -33,9 +33,10 @@ def dump_users(
     retweets: bool = typer.Option(True, help='Include retweets.'),
     database: Path = config.DATABASE_NAME,
 ):
+    logger.disable('db_utils')
     db_handler = DBHandler(database)
     users = db_handler.extract_users(since=since, until=until, include_retweets=retweets)
-    users = '\n'.join(users)
+    users = '\n'.join([f'@{u}' for u in users])
     if output_filename is not None:
         logger.info(f'Dumping usernames to {output_filename}')
         output_filename.write_text(users)
