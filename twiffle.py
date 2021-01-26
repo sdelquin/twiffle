@@ -32,10 +32,17 @@ def dump_users(
     until: str = datetime.now().isoformat(' ', 'seconds'),
     retweets: bool = typer.Option(True, help='Include retweets.'),
     database: Path = config.DATABASE_NAME,
+    excluded_users: Path = typer.Option(None, help='File with usernames on each line.'),
 ):
     logger.disable('db_utils')
     db_handler = DBHandler(database)
-    users = db_handler.extract_users(since=since, until=until, include_retweets=retweets)
+    if excluded_users:
+        excluded_users = excluded_users.read_text().strip().split('\n')
+    else:
+        excluded_users = []
+    users = db_handler.extract_users(
+        since=since, until=until, include_retweets=retweets, excluded_users=excluded_users
+    )
     users = '\n'.join([f'@{u}' for u in users])
     if output_filename is not None:
         output_filename.write_text(users)
