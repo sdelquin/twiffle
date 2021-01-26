@@ -2,3 +2,4 @@ tweepy
 prettyconf
 typer
 loguru
+pyyaml

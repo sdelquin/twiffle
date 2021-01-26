@@ -1,8 +1,8 @@
 from datetime import datetime
 from pathlib import Path
-from typing import List
 
 import typer
+import yaml
 from loguru import logger
 
 import config
@@ -19,33 +19,42 @@ app = typer.Typer()
 
 
 @app.command()
-def track(tracking_keywords: List[str], database: Path = config.DATABASE_NAME):
+def track(
+    settings: Path = typer.Argument(config.SETTINGS_FILE, help='Path to the settings file')
+):
+    settings = yaml.load(settings.read_text(), Loader=yaml.FullLoader)
+    database = Path(settings['database'])
+    keywords = settings['track']['keywords']
     db_handler = DBHandler(database)
     twiffle_handler = TwiffleHandler(db_handler)
-    twiffle_handler.run_stream(*tracking_keywords)
+    twiffle_handler.run_stream(*keywords)
 
 
 @app.command()
 def dump_users(
-    output_filename: Path = typer.Option(None, '--output', '-o'),
-    since: str = datetime.min.isoformat(' ', 'seconds'),
-    until: str = datetime.now().isoformat(' ', 'seconds'),
-    retweets: bool = typer.Option(True, help='Include retweets.'),
-    database: Path = config.DATABASE_NAME,
-    excluded_users: Path = typer.Option(None, help='File with usernames on each line.'),
+    settings: Path = typer.Argument(config.SETTINGS_FILE, help='Path to the settings file')
 ):
     logger.disable('db_utils')
+
+    settings = yaml.load(settings.read_text(), Loader=yaml.FullLoader)
+    database = Path(settings['database'])
+    excluded_users = settings.get('excluded_users', [])
+    s = settings['dump_users']
+    since = s.get('since', datetime.min.isoformat(' ', 'seconds'))
+    until = s.get('until', datetime.now().isoformat(' ', 'seconds'))
+    include_retweets = s.get('retweets', True)
+    output = s.get('output')
+
     db_handler = DBHandler(database)
-    if excluded_users:
-        excluded_users = excluded_users.read_text().strip().split('\n')
-    else:
-        excluded_users = []
     users = db_handler.extract_users(
-        since=since, until=until, include_retweets=retweets, excluded_users=excluded_users
+        since=since,
+        until=until,
+        include_retweets=include_retweets,
+        excluded_users=excluded_users,
     )
     users = '\n'.join([f'@{u}' for u in users])
-    if output_filename is not None:
-        output_filename.write_text(users)
+    if output is not None:
+        Path(output).write_text(users)
     else:
         print(users)
 

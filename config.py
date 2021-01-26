@@ -13,4 +13,4 @@ TWITTER_STATUS_BASE_URL = config(
     'TWITTER_STATUS_BASE_URL', default='https://twitter.com/twitter/statuses/'
 )
 
-DATABASE_NAME = config('DATABASE_NAME', default='twiffle.db')
+SETTINGS_FILE = config('SETTINGS_FILE', default='settings.yml')
