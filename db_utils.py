@@ -57,12 +57,15 @@ class DBHandler:
             query += ' and is_retweet=0'
         self.cursor.execute(query, (since, until))
         rows = self.cursor.fetchall()
-        return {
-            row['username']
-            for row in rows
-            if row['username'] not in excluded_users
-            and self._tweet_contains_terms(row['text'], must_include)
-        }
+        return sorted(
+            {
+                row['username']
+                for row in rows
+                if row['username'] not in excluded_users
+                and self._tweet_contains_terms(row['text'], must_include)
+            },
+            key=str.casefold,
+        )
 
     @staticmethod
     def _tweet_contains_terms(tweet_text: str, terms: list):
