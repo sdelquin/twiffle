@@ -41,7 +41,7 @@ def dump_users(
     settings = yaml.load(settings.read_text(), Loader=yaml.FullLoader)
     database = Path(settings['database'])
     s = settings.get('dump_users', {})
-    excluded_users = s.get('excluded_users', [])
+    excluded_users = [u.removeprefix('@') for u in s.get('excluded_users', [])]
     since = s.get('since', datetime.min.isoformat(' ', 'seconds'))
     until = s.get('until', datetime.now().isoformat(' ', 'seconds'))
     include_retweets = s.get('retweets', True)

@@ -47,7 +47,7 @@ dump_users:
   retweets: false
   output: users.txt
   excluded_users:
-    - TabularConf
+    - "@TabularConf"
     - sdelquin
   must_include:
     - "@ThePSF"
@@ -56,14 +56,14 @@ dump_users:
 
 - **database**: Filename for the SQLite database. \*
 - **track**: Tracking service settings. \*
-  - **keywords**: List of keywords to be tracked. Hashtags must include quotes. \*
+  - **keywords**: List of keywords to be tracked. _Hashtags_ and _accounts_ must include double quotes. \*
 - **dump_users**: Settings when dumping users. (_It can be ommited_)
   - **since**: Users will be extracted since this value. Datetime (as string) in ISO-format. It must include quotes. [Default: **beginning of time**]
   - **until**: Users will be extracted until this value. Datetime (as string) in ISO-format. It must include quotes. [Default: **current datetime**]
   - **retweets**: Boolean value indicating if retweets are included in the dump. [Default: `true`]
   - **output**: Filename where users will be dumped in. If no value is given in this argument, users will be dumped to **stdout**.
-  - **excluded_users**: List of Twitter usernames (without `@`) to be excluded on dump. [Default: **empty list**]
-  - **must_include**: List of terms which the matching tweets must include. It's an "AND" among all these terms. [Default: **empty list**]
+  - **excluded_users**: List of Twitter usernames to be excluded on dump. If `@` is prefixed, the text must be double-quoted. [Default: **empty list**]
+  - **must_include**: List of terms which the matching tweets must include. It's an "AND" among all these terms. If _hashtags_ or _accounts_ are added, they must be double-quoted. [Default: **empty list**]
 
 \* Required fields.
 
