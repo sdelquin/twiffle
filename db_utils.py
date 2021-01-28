@@ -36,7 +36,12 @@ class DBHandler:
         self.conn.commit()
 
     def extract_users(
-        self, since: str, until: str, include_retweets=True, excluded_users=[]
+        self,
+        since: str,
+        until: str,
+        include_retweets=True,
+        excluded_users=[],
+        must_include=[],
     ):
         """Extract unique usernames with tweets created after "since" and before "until"
         Parameters
@@ -45,11 +50,22 @@ class DBHandler:
             until: str with isoformat "YYYY-MM-DD HH:MM:SS"
         """
         logger.info(f'Extracting unique usernames from {since} to {until}')
-        query = '''SELECT DISTINCT(username)
+        query = '''SELECT *
                    FROM status
                    WHERE created_at >= ? and created_at <= ?'''
         if not include_retweets:
             query += ' and is_retweet=0'
         self.cursor.execute(query, (since, until))
         rows = self.cursor.fetchall()
-        return [row['username'] for row in rows if row['username'] not in excluded_users]
+        return {
+            row['username']
+            for row in rows
+            if row['username'] not in excluded_users
+            and self._tweet_contains_terms(row['text'], must_include)
+        }
+
+    @staticmethod
+    def _tweet_contains_terms(tweet_text: str, terms: list):
+        tweet_tokens = set(tweet_text.split())
+        terms = set(terms)
+        return terms <= tweet_tokens

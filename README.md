@@ -49,6 +49,9 @@ dump_users:
   excluded_users:
     - TabularConf
     - sdelquin
+  must_include:
+    - "@ThePSF"
+    - "@pandas_dev"
 ```
 
 - **database**: Filename for the SQLite database. \*
@@ -60,6 +63,7 @@ dump_users:
   - **retweets**: Boolean value indicating if retweets are included in the dump. [Default: `true`]
   - **output**: Filename where users will be dumped in. If no value is given in this argument, users will be dumped to **stdout**.
   - **excluded_users**: List of Twitter usernames (without `@`) to be excluded on dump. [Default: **empty list**]
+  - **must_include**: List of terms which the matching tweets must include. It's an "AND" among all these terms. [Default: **empty list**]
 
 \* Required fields.
 

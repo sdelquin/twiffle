@@ -46,6 +46,7 @@ def dump_users(
     until = s.get('until', datetime.now().isoformat(' ', 'seconds'))
     include_retweets = s.get('retweets', True)
     output = s.get('output')
+    must_include = s.get('must_include', [])
 
     db_handler = DBHandler(database)
     users = db_handler.extract_users(
@@ -53,6 +54,7 @@ def dump_users(
         until=until,
         include_retweets=include_retweets,
         excluded_users=excluded_users,
+        must_include=must_include,
     )
     users = '\n'.join([f'@{u}' for u in users])
     if output is not None:
