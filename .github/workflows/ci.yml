@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: Deploy project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Execute remote deploy commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: sdelquin.me
+          username: ${{ secrets.PRODUCTION_SSH_USERNAME }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: source ~/.virtualenvs/twiffle/bin/activate && cd ~/code/twiffle && ./deploy.sh
