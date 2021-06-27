@@ -31,10 +31,11 @@ def track(
 def dump_users(
     settings_path: str = typer.Option(
         config.SETTINGS_PATH, '--settings', '-s', help='Path to the settings file'
-    )
+    ),
+    dump_block: str = typer.Argument('all', help='Block to be dumped'),
 ):
     settings = yaml.load(Path(settings_path).read_text(), Loader=yaml.FullLoader)
-    services.dump_users(settings)
+    services.dump_users(settings, dump_block)
 
 
 if __name__ == "__main__":

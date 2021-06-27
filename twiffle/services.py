@@ -16,12 +16,15 @@ def track(settings: dict):
     twiffle_handler.run_stream(*keywords)
 
 
-def dump_users(settings: dict):
+def dump_users(settings: dict, dump_block: str = 'all'):
     logger.disable('twiffle.db_utils')
 
     db_path = config.DATA_DIR / (settings['label'] + '.db')
     dump = settings.get('dump_users', {})
+    dump_blocks = dump.keys() if dump_block == 'all' else [dump_block]
     for dump_name, dump_config in dump.items():
+        if dump_name not in dump_blocks:
+            continue
         excluded_users = [
             u.removeprefix('@') for u in dump_config.get('excluded_users', [])
         ]
