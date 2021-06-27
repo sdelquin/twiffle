@@ -4,5 +4,5 @@
 *.db
 *.log
 /data
-/resources
+.artwork
 .DS_Store
