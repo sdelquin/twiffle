@@ -31,37 +31,40 @@ API_ACCESS_TOKEN_SECRET = '<your-api-token-here>'
 
 ## Settings
 
-`twiffle` expects to have a `settings.yml` file at the current folder, where the behaviour of the service is configured.
+`twiffle` expects to have a `data/settings.yml` file where the behaviour of the service is configured.
 
 ### Example
 
 ```yml
-database: tabularconf.db
+label: tabularconf
 track:
   keywords:
     - "#TabularConf"
     - "#TabularConf2021"
 dump_users:
-  since: "2021-01-25 07:00:00"
-  until: "2021-01-29 22:59:00"
-  retweets: false
-  output: users.txt
-  excluded_users:
-    - "@TabularConf"
-    - sdelquin
-  must_include:
-    - "@ThePSF"
-    - "@pandas_dev"
+  books:
+    since: "2021-01-25 07:00:00"
+    until: "2021-01-29 22:59:00"
+    retweets: false
+    excluded_users:
+      - "@TabularConf"
+      - sdelquin
+    must_include:
+      - "#SuperGift"
+      - "@pandas_dev"
+  rpi:
+    must_include:
+      - "#iwantrpi"
+      - "@Raspberry_Pi"
 ```
 
-- **database**: Filename for the SQLite database. \*
+- **label**: Give a unique name for the whole configuration. \*
 - **track**: Tracking service settings. \*
-  - **keywords**: List of keywords to be tracked. _Hashtags_ and _accounts_ must include double quotes. \*
-- **dump_users**: Settings when dumping users. (_It can be ommited_)
+  - **keywords**: List of keywords to be tracked. It's an "OR" among all these terms. _Hashtags_ and _accounts_ must include double quotes. \*
+- **dump_users**: Settings when dumping users. It contains "blocks" to define dumping features:
   - **since**: Users will be extracted since this value. Datetime (as string) in ISO-format. It must include quotes. [Default: **beginning of time**]
   - **until**: Users will be extracted until this value. Datetime (as string) in ISO-format. It must include quotes. [Default: **current datetime**]
   - **retweets**: Boolean value indicating if retweets are included in the dump. [Default: `true`]
-  - **output**: Filename where users will be dumped in. If no value is given in this argument, users will be dumped to **stdout**.
   - **excluded_users**: List of Twitter usernames to be excluded on dump. If `@` is prefixed, the text must be double-quoted. [Default: **empty list**]
   - **must_include**: List of terms which the matching tweets must include. It's an "AND" among all these terms. If _hashtags_ or _accounts_ are added, they must be double-quoted. [Default: **empty list**]
 
@@ -74,32 +77,55 @@ dump_users:
 To run the tracking service, use the following command:
 
 ```console
-$ ./twiffle.py track
+$ ./main.py track
 ```
 
-> It will use the **track section** in `settings.yml` to read the proper parameters.
+It will use the **track section** defined in `data/settings.yml` to read the proper parameters. Output will be a sqlite file in `data/tabularconf.db`.
+
+You can provide a custom settings file using:
+
+```console
+$ ./main.py track -c custom-settings.yml
+```
 
 ### Dumping users
 
 To dump **unique** usernames from captured tweets (tracking service), use the following command:
 
 ```console
-$ ./twiffle.py dump-users
+$ ./main.py dump-users
 ```
 
-> It will use the **dump_users** section in `settings.yml` to read the proper parameters.
+It will use the **dump_users** section in `data/settings.yml` to read the proper parameters. Output will these two files:
 
-### Provide custom settings file
+- `data/tabularconf-books.dump`
+- `data/tabularconf-rpi.dump`
 
-Default settings file is `settings.yml` though, you can use your custom settings file with the following command:
+You can provide a custom settings file using:
 
 ```console
-$ ./twiffle.py -c mysettingsfile.yml
+$ ./main.py dump-users -c custom-settings.yml
+```
+
+#### DUMP SINGLE BLOCK
+
+Instead of dumping all the existing blocks from settings file, you can dump a single one using:
+
+```console
+$ ./main.py dump-users books  # generate tabularconf-books.dump
+```
+
+#### DUMP TO STDOUT
+
+Instead of dumping users to a file, you can show them in stdout using:
+
+```console
+$ ./main.py dump-users -o books
 ```
 
 ## Logging
 
-Operations performed by `./twiffle.py track` are logged to `twiffle.log` with a default file rotation.
+Operations performed by `./main.py track` are logged to `twiffle.log` with a default file rotation.
 
 Logging behaviour can be overwrite using the following keys in the `.env` file:
 

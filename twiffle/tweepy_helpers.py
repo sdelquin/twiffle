@@ -3,7 +3,7 @@ import os
 import tweepy
 from loguru import logger
 
-import config
+from twiffle import config
 
 
 class TwiffleHandler:
