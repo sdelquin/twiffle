@@ -31,7 +31,7 @@ def track(
 def dump_users(
     dump_block: str = typer.Argument('all', help='Block to be dumped'),
     settings_path: str = typer.Option(
-        config.SETTINGS_PATH, '--settings', '-s', help='Path to the settings file'
+        config.SETTINGS_PATH, '--settings', '-c', help='Path to the settings file'
     ),
     stdout: bool = typer.Option(False, '--stdout', '-o', help='Dump users only to stdout'),
 ):
