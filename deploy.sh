@@ -4,3 +4,4 @@
 
 git pull
 pip install -r requirements.txt
+supervisorctl restart twiffle
