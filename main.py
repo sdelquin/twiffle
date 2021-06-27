@@ -19,8 +19,8 @@ app = typer.Typer()
 
 @app.command()
 def track(
-    settings_path: str = typer.Argument(
-        config.SETTINGS_PATH, help='Path to the settings file'
+    settings_path: str = typer.Option(
+        config.SETTINGS_PATH, '--settings', '-s', help='Path to the settings file'
     )
 ):
     settings = yaml.load(Path(settings_path).read_text(), Loader=yaml.FullLoader)
@@ -29,8 +29,8 @@ def track(
 
 @app.command()
 def dump_users(
-    settings_path: str = typer.Argument(
-        config.SETTINGS_PATH, help='Path to the settings file'
+    settings_path: str = typer.Option(
+        config.SETTINGS_PATH, '--settings', '-s', help='Path to the settings file'
     )
 ):
     settings = yaml.load(Path(settings_path).read_text(), Loader=yaml.FullLoader)
