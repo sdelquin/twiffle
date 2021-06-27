@@ -3,6 +3,6 @@
 *.pyc
 *.db
 *.log
-*.yml
+/data
 /resources
 .DS_Store

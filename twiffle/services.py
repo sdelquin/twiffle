@@ -3,14 +3,15 @@ from pathlib import Path
 
 from loguru import logger
 
+from twiffle import config
 from twiffle.db_utils import DBHandler
 from twiffle.tweepy_helpers import TwiffleHandler
 
 
 def track(settings: dict):
-    database = Path(settings['database'])
+    db_path = config.DATA_DIR / (settings['label'] + '.db')
     keywords = settings['track']['keywords']
-    db_handler = DBHandler(database)
+    db_handler = DBHandler(db_path)
     twiffle_handler = TwiffleHandler(db_handler)
     twiffle_handler.run_stream(*keywords)
 
@@ -18,10 +19,9 @@ def track(settings: dict):
 def dump_users(settings: dict):
     logger.disable('twiffle.db_utils')
 
-    database = Path(settings['database'])
+    db_path = config.DATA_DIR / (settings['label'] + '.db')
     dump = settings.get('dump_users', {})
     for dump_name, dump_config in dump.items():
-        print(dump_config)
         excluded_users = [
             u.removeprefix('@') for u in dump_config.get('excluded_users', [])
         ]
@@ -30,7 +30,7 @@ def dump_users(settings: dict):
         include_retweets = dump_config.get('retweets', True)
         must_include = dump_config.get('must_include', [])
 
-        db_handler = DBHandler(database)
+        db_handler = DBHandler(db_path)
         users = db_handler.extract_users(
             since=since,
             until=until,
@@ -39,4 +39,5 @@ def dump_users(settings: dict):
             must_include=must_include,
         )
         users = '\n'.join([f'@{u}' for u in users])
-        Path(dump_name + '.txt').write_text(users)
+        dump_file = config.DATA_DIR / (dump_name + '.dump')
+        Path(dump_file).write_text(users)
