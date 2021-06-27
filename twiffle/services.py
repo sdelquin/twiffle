@@ -45,5 +45,5 @@ def dump_users(settings: dict, dump_block: str = 'all', stdout_dump=False):
         if stdout_dump:
             print(users)
         else:
-            dump_file = config.DATA_DIR / (dump_name + '.dump')
+            dump_file = config.DATA_DIR / (f'{settings["label"]}-{dump_name}.dump')
             Path(dump_file).write_text(users)
