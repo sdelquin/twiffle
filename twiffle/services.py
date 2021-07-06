@@ -16,7 +16,7 @@ def track(settings: dict):
     twiffle_handler.run_stream(*keywords)
 
 
-def dump_users(settings: dict, dump_block: str = 'all', stdout_dump=False):
+def dump_users(settings: dict, dump_block: str = 'all', dump_to_file=False):
     logger.disable('twiffle.db_utils')
 
     db_path = config.DATA_DIR / (settings['label'] + '.db')
@@ -42,8 +42,8 @@ def dump_users(settings: dict, dump_block: str = 'all', stdout_dump=False):
             must_include=must_include,
         )
         users = '\n'.join([f'@{u}' for u in users])
-        if stdout_dump:
-            print(users)
-        else:
+        if dump_to_file:
             dump_file = config.DATA_DIR / (f'{settings["label"]}-{dump_name}.dump')
             Path(dump_file).write_text(users)
+        else:
+            print(users)

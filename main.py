@@ -33,10 +33,10 @@ def dump_users(
     settings_path: str = typer.Option(
         config.SETTINGS_PATH, '--settings', '-c', help='Path to the settings file'
     ),
-    stdout: bool = typer.Option(False, '--stdout', '-o', help='Dump users only to stdout'),
+    dump_to_file: bool = typer.Option(False, '--file', '-f', help='Dump users to file'),
 ):
     settings = yaml.load(Path(settings_path).read_text(), Loader=yaml.FullLoader)
-    services.dump_users(settings, dump_block, stdout)
+    services.dump_users(settings, dump_block, dump_to_file)
 
 
 if __name__ == "__main__":
