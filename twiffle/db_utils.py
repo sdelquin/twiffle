@@ -1,5 +1,6 @@
 import sqlite3
 
+import twikenizer
 from loguru import logger
 
 
@@ -69,6 +70,7 @@ class DBHandler:
 
     @staticmethod
     def _tweet_contains_terms(tweet_text: str, terms: list):
-        tweet_tokens = set(tweet_text.lower().split())
+        twk = twikenizer.Twikenizer()
+        tweet_tokens = set(twk.tokenize(tweet_text.lower()))
         terms = set([t.lower() for t in terms])
         return terms <= tweet_tokens

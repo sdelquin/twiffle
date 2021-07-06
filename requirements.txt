@@ -3,3 +3,5 @@ prettyconf
 typer
 loguru
 pyyaml
+emoji
+twikenizer
