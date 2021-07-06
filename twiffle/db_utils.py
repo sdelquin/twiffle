@@ -70,5 +70,5 @@ class DBHandler:
     @staticmethod
     def _tweet_contains_terms(tweet_text: str, terms: list):
         tweet_tokens = set(tweet_text.lower().split())
-        terms = set(terms.lower())
+        terms = set([t.lower() for t in terms])
         return terms <= tweet_tokens
