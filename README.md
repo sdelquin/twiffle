@@ -96,10 +96,7 @@ To dump **unique** usernames from captured tweets (tracking service), use the fo
 $ ./main.py dump-users
 ```
 
-It will use the **dump_users** section in `data/settings.yml` to read the proper parameters. Output will these two files:
-
-- `data/tabularconf-books.dump`
-- `data/tabularconf-rpi.dump`
+It will use the **dump_users** section in `data/settings.yml` to read the proper parameters.
 
 You can provide a custom settings file using:
 
@@ -112,16 +109,23 @@ $ ./main.py dump-users -c custom-settings.yml
 Instead of dumping all the existing blocks from settings file, you can dump a single one using:
 
 ```console
-$ ./main.py dump-users books  # generate tabularconf-books.dump
+$ ./main.py dump-users books
 ```
 
-#### DUMP TO STDOUT
+#### DUMP TO FILE
 
-Instead of dumping users to a file, you can show them in stdout using:
+Instead of dumping users to stdout, you can redirect them to output files:
 
 ```console
-$ ./main.py dump-users -o books
+$ ./main.py dump-users -f
 ```
+
+It will use the **dump_users** section in `data/settings.yml` to read the proper parameters. Output will create these two files:
+
+- `data/tabularconf-books.dump`
+- `data/tabularconf-rpi.dump`
+
+A single block can be passed to the command.
 
 ## Logging
 
