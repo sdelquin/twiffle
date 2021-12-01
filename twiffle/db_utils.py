@@ -74,3 +74,8 @@ class DBHandler:
         tweet_tokens = set(twk.tokenize(tweet_text.lower()))
         terms = set([t.lower() for t in terms])
         return terms <= tweet_tokens
+
+    def select_all(self):
+        query = 'select * from status order by created_at'
+        self.cursor.execute(query)
+        return self.cursor.fetchall()

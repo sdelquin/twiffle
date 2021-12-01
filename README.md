@@ -127,6 +127,29 @@ It will use the **dump_users** section in `data/settings.yml` to read the proper
 
 A single block can be passed to the command.
 
+### Dumping database
+
+To dump the whole contents of table (database), use the following command:
+
+```console
+$ ./main.py dump-db
+```
+
+✨ &nbsp;A beautiful table is shown!
+
+You can slice results with the `-s` option:
+
+```console
+$ ./main.py dump-db -s 10  # show first 10 records
+$ ./main.py dump-db -s -7  # show last 7 records
+```
+
+You can also provide a custom settings file using:
+
+```console
+$ ./main.py dump-db -c custom-settings.yml
+```
+
 ## Logging
 
 Operations performed by `./main.py track` are logged to `twiffle.log` with a default file rotation.

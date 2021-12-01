@@ -5,3 +5,4 @@ loguru
 pyyaml
 emoji
 twikenizer
+rich

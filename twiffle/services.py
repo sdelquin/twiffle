@@ -2,6 +2,8 @@ from datetime import datetime
 from pathlib import Path
 
 from loguru import logger
+from rich.console import Console
+from rich.table import Table
 
 from twiffle import config
 from twiffle.db_utils import DBHandler
@@ -47,3 +49,32 @@ def dump_users(settings: dict, dump_block: str = 'all', dump_to_file=False):
             Path(dump_file).write_text(users)
         else:
             print(users)
+
+
+def dump_db(settings: dict, slice: int):
+    logger.disable('twiffle.db_utils')
+
+    db_path = config.DATA_DIR / (settings['label'] + '.db')
+    db_handler = DBHandler(db_path)
+    rows = db_handler.select_all()
+
+    console = Console()
+
+    table = Table(show_header=True, header_style='bold magenta')
+    table.add_column('id', style='dim')
+    table.add_column('username')
+    table.add_column('text')
+    table.add_column('created_at')
+    table.add_column('url')
+    table.add_column('is_retweet')
+
+    if slice > 0:
+        rows = rows[:slice]
+    elif slice < 0:
+        rows = rows[slice:]
+
+    for row in rows:
+        values = [str(v) for v in tuple(row)]
+        table.add_row(*values)
+
+    console.print(table)
