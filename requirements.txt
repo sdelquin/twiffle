@@ -1,4 +1,4 @@
-tweepy
+tweepy==3.10.0
 prettyconf
 typer
 loguru
