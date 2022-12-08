@@ -16,4 +16,4 @@ jobs:
           host: sdelquin.me
           username: ${{ secrets.PRODUCTION_SSH_USERNAME }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          script: source ~/.virtualenvs/twiffle/bin/activate && cd ~/code/twiffle && ./deploy.sh
+          script: source ~/.pyenv/versions/twiffle/bin/activate && cd ~/code/twiffle && ./deploy.sh
